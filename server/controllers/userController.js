@@ -59,7 +59,7 @@ export const login = async(req, res) =>{
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'})
         
         res.cookie('token', token, {
-            httpOnly: true,  // prevent javascript to access the cookie
+            httpOnly: true,  
             secure: process.env.NODE_ENV === 'production', // Use secure cookie in production
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', //csrf protection 
             maxAge: 7*24*60*60*1000, //cookie expire time
@@ -70,5 +70,7 @@ export const login = async(req, res) =>{
 
     } catch(error){
 
+        console.log(error.message);
+        res.json({success:false , message: error.message}) 
     }
 }
