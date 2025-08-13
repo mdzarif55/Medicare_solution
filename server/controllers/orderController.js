@@ -10,7 +10,7 @@ export const placeOrderCod = async (req, res) => {
             return res.json({ success: false, message: "Indalid Date" })
         }
 
-        //calculate amount using items
+        //calculate amount using items c
         let amount = await items.reduce(async (acc, item) => {
             const product = await Product.findById(item.product);
             return (await acc) + product.offerPrice * item.quantity;
