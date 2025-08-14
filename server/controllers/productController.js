@@ -3,9 +3,16 @@ import Product from "../models/products.js"
 //add product : /api/product/add
 export const addProduct = async (req, res) => {
     try {
+        if (!req.body.productdata) {
+            return res.json({ success: false, message: "Product data is missing" });
+        }
         let productData = JSON.parse(req.body.productdata)
 
         const images = req.files
+
+        if (!images || images.length === 0) {
+            return res.json({ success: false, message: "No images uploaded" });
+        }
 
         let imagesUrl = await Promise.all(
             images.map(async (item) => {
@@ -51,8 +58,8 @@ export const productById = async (req, res) => {
 export const changeStock = async (req, res) => {
     try {
         const { id, inStock } = req.body
-        await Product.findByIdAndUpdate(id, {inStock})
-        res.json({ success: true, message:"Stock Updated" })
+        await Product.findByIdAndUpdate(id, { inStock })
+        res.json({ success: true, message: "Stock Updated" })
     } catch (error) {
         console.log(error.message);
         res.json({ success: false, message: error.message })
