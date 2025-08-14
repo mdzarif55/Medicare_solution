@@ -1,5 +1,5 @@
 import Order from "../models/Order.js";
-import Product from "../models/products.js";
+import Product from "../models/product.js";
 
 // placed or COD : /api/order/cod
 

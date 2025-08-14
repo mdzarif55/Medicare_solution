@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary"
-import Product from "../models/products.js"
+import Product from "../models/product.js"
 //add product : /api/product/add
 export const addProduct = async (req, res) => {
     try {
@@ -57,11 +57,30 @@ export const productById = async (req, res) => {
 //change product inStock: /api/product/stock
 export const changeStock = async (req, res) => {
     try {
-        const { id, inStock } = req.body
-        await Product.findByIdAndUpdate(id, { inStock })
-        res.json({ success: true, message: "Stock Updated" })
+        const { id, inStock } = req.body;
+
+        // Check if the provided ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, message: "Invalid Product ID" });
+        }
+
+        // Find the product by ID and update the inStock status
+        const updatedProduct = await Product.findByIdAndUpdate(id, { inStock }, { new: true });
+
+        // If the product is not found, return a 404 error
+        if (!updatedProduct) {
+            return res.status(404).json({ success: false, message: "Product not found" });
+        }
+
+        // Return success and the updated product in the response
+        res.json({
+            success: true,
+            message: "Stock updated successfully",
+            product: updatedProduct,  // Return the updated product
+        });
+
     } catch (error) {
-        console.log(error.message);
-        res.json({ success: false, message: error.message })
+        console.error("Error updating stock:", error.message);  // Log the error for debugging
+        res.status(500).json({ success: false, message: error.message });
     }
 }
