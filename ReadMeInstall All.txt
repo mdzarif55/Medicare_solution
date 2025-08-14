@@ -1,3 +1,9 @@
+Frontend:
+
+
+
+
+after done backend file ready - npm install axios
 
 ForBackend:
 
