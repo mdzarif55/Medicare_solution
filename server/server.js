@@ -18,13 +18,20 @@ await connectDB()
 await connectCloudinary()
 
 //Allow Multiple origins
-const allowedOrgins = ['http://localhost:5173/']
+const allowedOrigins = ['http://localhost:5173/']
 
 //Middleware configuration
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors({origin: allowedOrgins, credentials:true}));
+app.use(express.json());  // Middleware to parse JSON bodies
+app.use(cookieParser());  // Middleware for cookies
+app.use(cors({ origin: ['http://localhost:5173'], credentials: true }));  // CORS configuration
 
+// app.use(cors({origin: allowedOrigins, credentials:true}));
+
+// app.use((req, res, next) => {
+//     console.log('Request Body:', req.body); // Logs the body
+//     console.log('Cookies:', req.cookies);  // Logs the cookies
+//     next(); // Proceed to the next middleware or route handler
+// });
 
 app.get('/', (req, res) =>  res.send("API is Working"));
 app.use('/api/user',userRouter)
@@ -33,6 +40,7 @@ app.use('/api/product',productRouter)
 app.use('/api/cart',cartRouter)
 app.use('/api/address',addressRouter)
 app.use('/api/order',orderRouter)
+
 
 app.listen(port, () => {
   console.log(`✅ Server is running on http://localhost:${port}`);
