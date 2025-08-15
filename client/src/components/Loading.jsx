@@ -5,10 +5,11 @@ import { useEffect } from 'react'
 
 const Loading = () => { 
 
-    const {navigate} = useAppContext()
+    const {navigate} = useAppContext();
     let {search} = useLocation()
     const query = new URLSearchParams(search)
     const nextUrl = query.get('next');
+    
 
     useEffect(()=>{
         if(nextUrl){
