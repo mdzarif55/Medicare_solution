@@ -43,31 +43,48 @@ const Cart = () => {
 
     const placeOrder = async () => {
         try {
-            if(!selectedAddress){
+            if (!selectedAddress) {
                 return toast.error("Please select an address")
             }
             //plce for cod
-            if(paymentOption === 'COD')
-            {
-                const {data} = await axios.post('/api/order/cod', {
+            if (paymentOption === 'COD') {
+                const { data } = await axios.post('/api/order/cod', {
                     userId: user._id,
-                    items: cartArry.map(item => ({product: item._id, quantity: item.quantity})),
+                    items: cartArry.map(item => ({ product: item._id, quantity: item.quantity })),
                     address: selectedAddress._id
                 })
-                if(data.success){
+                if (data.success) {
                     toast.success(data.message)
                     setCartItems({})
                     navigate('/my-orders')
 
                 }
-                else{
+                else {
                     toast.error(data.message)
                 }
             }
+
+            //PLACED ORDER IN STRIPE
+
+            else {
+                const { data } = await axios.post('/api/order/stripe', {
+                    userId: user._id,
+                    items: cartArry.map(item => ({ product: item._id, quantity: item.quantity })),
+                    address: selectedAddress._id
+                })
+                if (data.success) {
+                    window.location.replace(data.url)
+                }
+                else {
+                    toast.error(data.message)
+                }
+            }
+
+
         } catch (error) {
             toast.error(error.message)
         }
-     }
+    }
 
     useEffect(() => {
         if (products.length > 0 && cartItems) {
@@ -76,11 +93,11 @@ const Cart = () => {
 
     }, [products, cartItems])
 
-    useEffect(()=>{
-        if(user){
+    useEffect(() => {
+        if (user) {
             getUserAddress()
         }
-    },[user])
+    }, [user])
 
     return products.length > 0 && cartItems ? (
         <div className="flex flex-col md:flex-row mt-16">

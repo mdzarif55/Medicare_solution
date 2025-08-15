@@ -19,6 +19,7 @@ import ProductList from './pages/seller/ProductList'
 import Orders from './pages/seller/Orders'
 import FeatureHub from './pages/FeatureHub'
 import 'leaflet/dist/leaflet.css';
+import Loading from './components/loading'
 
 
 const App = () => {
@@ -45,6 +46,8 @@ const App = () => {
           <Route path='/cart' element={<Cart/>} />
           <Route path='/add-address' element={<AddAddress/>} />
           <Route path='/my-orders' element={<MyOders/>} />
+          <Route path='/loader' element={<Loading/>} />
+
           <Route path='/seller' element={isSeller ? <SellerLayout/> :<SellerLogin/>}>
           <Route index  element={ isSeller ? <AddProduct/> : null}/>
           <Route path='product-list'  element={ <ProductList/>}/>
